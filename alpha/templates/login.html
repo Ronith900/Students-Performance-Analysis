@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% load crispy_forms_tags %} {% block content %}
+<div class="container">
+    <div style="margin: auto;
+  width: 60%;
+  padding: 10px;" >
+        <div class="content-section" >
+            {% if messages %}
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="alert alert-primary" role="alert">
+                        {% for message in messages %}
+                        {{ message }}<br/>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4 justify-content-center">Log In</legend>
+                    {{ form | crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info col-md-12" type="submit">Login</button>
+                    <br>
+
+                </div>
+            </form>
+            <hr>
+
+            <a class="btn btn-outline-dark col-md-12" href="{% url 'social:begin' 'facebook' %}"><i
+                    class="fab fa-facebook"></i> Continue with Facebook</a>
+
+            <br><br>
+            <a class="btn btn-outline-dark col-md-12" href="{% url 'social:begin' 'google-oauth2' %}"><i
+                    class="fab fa-google"></i> Continue with google</a>
+
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Need An Account?
+                    <a class="ml-2" href="{% url 'register'%}">Sign Up Now</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

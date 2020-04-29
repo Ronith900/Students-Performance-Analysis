@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/all.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'js/moment.js'%}"></script>
+    <script src="{% static 'js/Chart.js'%}"></script>
+    <script src="{% static 'js/Chart.min.js'%}"></script>
+
+    {% if title %}
+        <title>Performance - {{ title }}</title>
+    {% else %}
+        <title>Performance</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="{% url 'index' %}"><i class="fas fa-home"></i> Home</a>
+            <!--<a class="navbar-brand mr-4" href="{% url 'about' %}">About</a>-->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+
+            </div>
+            <!-- Navbar Right Side -->
+              {% if user.is_authenticated%}
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="{% url 'create-term' %}"><i class="fas fa-plus-square"></i> Add Term</a>
+                <a class="nav-item nav-link" href="#"><i class="fas fa-user"></i> {{user.username}}</a>
+                <a class="nav-item nav-link" href="{% url 'logout'%}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+              {% else %}
+              <div class="navbar-nav">
+                  <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+              <a class="nav-item nav-link" href="{% url 'register'%}">Register</a>
+              </div>
+              {% endif%}
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main">
+
+
+        {% block content %}
+
+        {% endblock %}
+
+
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'js/all.js'%}"></script>
+
+    </body>
+</html>

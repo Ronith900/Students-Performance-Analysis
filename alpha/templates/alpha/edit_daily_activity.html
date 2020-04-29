@@ -1,0 +1,33 @@
+<form method="POST" action="{% url 'edit-daily-activity' activities.0.subject.term.id activities.0.activity_date.date.year activities.0.activity_date.date.month activities.0.activity_date.date.day %}" >
+    {% csrf_token %}
+
+        <div class="modal-header">
+            <h4 class="modal-title">Total hours studied on {{activity_date|date:"d M Y"}} : <span id="tot_hrs">{{total_hrs}}</span>
+
+            </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+       <span aria-hidden="true">&times;</span>
+        </div>
+
+        <div class="modal-body" >
+
+            {% for activity in activities%}
+            <div class="form-row">
+                <label for="{{subj.id}}" class="col-sm-4 col-form-label">{{activity.subject.name}} : </label>
+                <div class="col-sm-4 input-form">
+                    <input type="text" name="{{activity.id}}" class="form-control" id="{{activity.id}}"
+                           value={{activity.hour_spent}}>
+                </div>
+            </div>
+            <br>
+            {% endfor %}
+        </div>
+
+
+    <div class="modal-footer">
+        <button type="submit" value="Update" class="btn btn-success btn-sm">Update</button>
+    </div>
+
+
+</form>
+

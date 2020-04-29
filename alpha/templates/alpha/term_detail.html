@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 col-sm-12" style="padding-left: 50px;">
+                <form method="POST" action="{% url 'term-detail' object.id %}" onsubmit="return validateForm()">
+                    {% csrf_token %}
+                    <div class="card" style="height:350px;">
+
+                        <div class="card-header in-line">
+                            <h4>Hours studied today : <span id="tot_hrs">0</span>
+                                <button type="submit" class="btn btn-success btn-sm ">Save</button>
+                            </h4>
+                        </div>
+
+                        <div class="card-body text-center " style="overflow:auto;height:110px">
+
+                            {% for subj in subjects%}
+                            <div class="form-group row">
+                                <label for="{{subj.id}}" class="col-sm-4 col-form-label">{{subj.name}} : </label>
+                                <div class="col-sm-4 input-form">
+                                    <input type="text" name="{{subj.id}}" class="form-control" id="{{subj.id}}"
+                                           value=0>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-8 col-sm-12" style="padding-right:50px;">
+                <div class="card">
+                    <h4 class="card-header">
+                        {{object.name}}
+                        <small><font size="4">Modules</font></small>
+
+
+                        <button class="btn btn-info btn-xs"
+                                data-url="{% url 'term-analysis' object.id%}"
+                                data-remote="false" data-toggle="modal" data-modal-size="modal-lg"
+                                data-target="#bd_Modal"
+                        >Analyse
+                        </button>
+
+
+                    </h4>
+
+                    <div class="card-body text-center">
+                        <div class="table-responsive bordered">
+                            <table class="table" id="table-id">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <a><i class="fas fa-book"></i> Subject's</a>
+                                    </th>
+                                    <th>
+                                        <a><i class="fas fa-stopwatch"></i> Total Hours</a>
+                                    </th>
+                                    <th>
+                                        <a><i class="far fa-edit fa-lg"></i> Result's</a>
+                                    </th>
+                                    <th>
+                                        <a><i class="far fa-edit fa-lg"></i> Action's</a>
+                                    </th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody class="list" id="sort">
+                                {% for subj in subjects %}
+                                <tr>
+                                    <td class="align-middle">{{ subj.name }}</td>
+                                    <td class="align-middle">{{subj.total_hr_spent}}</td>
+                                    <td class="align-middle">
+                                        {{subj.result}}
+                                    </td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-warning btn-xs"
+                                                data-url="{% url 'add-result' subj.id%}"
+                                                data-remote="false" data-toggle="modal" data-modal-size="modal-sm"
+                                                data-target="#bd_Modal"
+                                        >Results
+                                        </button>
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            <!-- settling the amount -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12" style="padding-left: 50px;padding-right:50px;">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Daily analysis
+                            <button class="btn btn-info btn-xs"
+                                data-url="{% url 'daily-analysis' object.id%}"
+                                data-remote="false" data-toggle="modal" data-modal-size="modal-lg"
+                                data-target="#bd_Modal"
+                        >Analyse
+                        </button>
+                        </h4>
+                    </div>
+                    <div class="card-body text-center">
+
+                        <div class="table-responsive bordered">
+                            <table class="table">
+
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <a><i class="fas fa-calendar-week"></i> Date</a>
+                                    </th>
+                                    <th>
+                                        <a><i class="fas fa-stopwatch"></i> Total Hrs</a>
+                                    </th>
+
+                                    {% for sub_name in subj_name%}
+                                    <th>
+                                        <a><i class="fas fa-book"></i> {{ sub_name }}</a>
+                                    </th>
+                                    {% endfor %}
+                                    <th>
+                                        <a><i class="fas fa-edit"></i> Actions</a>
+                                    </th>
+
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+                                {% for subj_object,activity_hrs in daily_hustle.items %}
+
+                                <tr>
+
+                                    <td class="allign-middle">{{subj_object|date:"d M Y"}}</td>
+                                    {% for sub_name,tot_hrs in activity_hrs.items %}
+                                    <td class="align-middle">
+                                        {{tot_hrs}}
+                                    </td>
+
+                                    {% endfor %}
+                                    <td>
+                                         <button class="btn btn-warning btn-xs"
+                                                data-url="{% url 'edit-daily-activity' object.id subj_object.date.year subj_object.date.month subj_object.date.day %}"
+                                                data-remote="false" data-toggle="modal" data-modal-size="modal-lg"
+                                                data-target="#bd_Modal"
+                                        >Edit
+                                        </button>
+
+
+                                    </td>
+
+
+
+                                </tr>
+                                {% endfor %}
+
+
+
+                                </tbody>
+                            </table>
+                            <!-- settling the amount -->
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="bd_Modal" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog {%block modal-size %} modal-lg {% endblock %}" role="document">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+
+
+     $("input").keyup(function(){
+            var input = $(".input-form").children("input");
+            var sum_value = 0
+            $.each(input,function(index,value){
+                sum_value += parseInt(value.value)
+            });
+            $("#tot_hrs").text(sum_value)
+        });
+
+    function validateForm(){
+        var tot_hrs = $("#tot_hrs").text()
+        if (parseInt(tot_hrs) == 0 || parseInt(tot_hrs) > 24){
+            alert('Invalid entry !')
+            return false;
+        }
+
+    }
+
+    $(document).ready(function(){
+        $("#bd_Modal").on('show.bs.modal',function(e){
+            var link = $(e.relatedTarget);
+            console.log(link);
+            var url = link.data('url');
+            console.log(url)
+            var size = link.data('modal-size');
+            var callback = link.data('callback-load-tab');
+
+            $(this).find(".modal-dialog").removeClass('modal-sm modal-md modal-lg').addClass(size);
+            $(this).find(".modal-content").empty();
+            $(this).find(".modal-content").load(url,function(){
+
+
+
+            });
+
+
+        });
+
+    });
+
+
+
+
+
+
+</script>
+
+{% endblock content%}

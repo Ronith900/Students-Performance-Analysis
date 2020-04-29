@@ -1,0 +1,39 @@
+{% extends "base.html" %} {%block content%}
+<div class="row">
+    <div class="container">
+        <div class="col-md-10">
+            <h1 class="font-weight-bold">Your Semesters</h1>
+            <br/>
+        </div>
+        {% for t, subjects in term.items %}
+        <div class="col-md-10">
+            <article class="media content-section">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <small>
+                            <font size="4" color="SteelBlue"><i class="fas fa-globe-americas"></i>
+                                Modules opted:</font>
+                            {% for subj in subjects %}
+                            <span>{{subj.name}} &nbsp;</span>
+
+                            {% endfor %}
+
+                        </small>
+
+                    </div>
+
+                    <h2>
+                        <a class="article-title" href="{% url 'term-detail' t.id%}">
+                            {{t.name}}
+                        </a>
+                        <a href="{%url 'term-delete' t.id%}" class="btn btn-danger btn-sm float-right">Delete</a>
+                    </h2>
+                </div>
+            </article>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+
+
+ {% endblock content %}
